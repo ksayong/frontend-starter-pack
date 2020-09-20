@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 // [定数] webpack の出力オプションを指定します
 // 'production' か 'development' を指定
-const MODE = "production";
+const MODE = "development";
 
 // ソースマップの利用有無(productionのときはソースマップを利用しない)
 const enabledSourceMap = MODE === "development";
@@ -26,6 +26,23 @@ module.exports = {
 
     module: {
         rules: [
+            {
+                // 拡張子 .js の場合
+                test: /\.js$/,
+                use: [
+                    {
+                        // Babel を利用する
+                        loader: 'babel-loader',
+                        // Babel のオプションを指定する
+                        options: {
+                            presets: [
+                                // プリセットを指定することで、ES5 に変換
+                                '@babel/preset-env',
+                            ]
+                        }
+                    }
+                ]
+            },
             // Sassファイルの読み込みとコンパイル
             {
                 test: /\.scss/, // 対象となるファイルの拡張子
@@ -61,12 +78,6 @@ module.exports = {
         ],
     },
 
-    // webpack-dev-serverを立ち上げた時のドキュメントルートを設定
-    // ここではdistディレクトリのindex.htmlにアクセスするよう設定してます
-    devServer: {
-        contentBase: outputPath
-    },
-
     plugins: [
         // CSSファイルを外だしにするプラグイン
         new MiniCssExtractPlugin({
@@ -74,4 +85,10 @@ module.exports = {
             filename: "css/style.css",
         }),
     ],
+
+    // webpack-dev-serverを立ち上げた時のドキュメントルートを設定
+    // ここではdistディレクトリのindex.htmlにアクセスするよう設定してます
+    devServer: {
+        contentBase: outputPath
+    },
 };
