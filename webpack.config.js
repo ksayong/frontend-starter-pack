@@ -66,6 +66,22 @@ module.exports = {
                             importLoaders: 2,
                         },
                     },
+                    // PostCSSのための設定
+                    {
+                        loader: "postcss-loader",
+                        options: {
+                            // PostCSS側でもソースマップを有効にする
+                            sourceMap: enabledSourceMap,
+                            plugins: [
+                                // Autoprefixerを有効化
+                                // ベンダープレフィックスを自動付与する
+                                require("autoprefixer")({
+                                    grid: true
+                                })
+                            ]
+                        }
+                    },
+                    // Sassをバンドルするための機能
                     {
                         loader: "sass-loader",
                         options: {
